@@ -60,10 +60,11 @@ class MarcadorPDF(tk.Tk):
 
     def abrir_pdf(self):
 
+        self.ao_abrir_novo_pdf()
         caminho_arquivo = filedialog.askopenfilename(filetypes=[('Arquivos PDF', '*.pdf')])
+
         if caminho_arquivo:
             self.nome_pdf = os.path.basename(caminho_arquivo)
-            self.ao_abrir_novo_pdf()
             texto = extrair_texto(caminho_arquivo)
             self.texto_pdf.delete('1.0', tk.END)
             self.texto_pdf.insert('1.0', texto)
@@ -88,7 +89,7 @@ class MarcadorPDF(tk.Tk):
             'texto': self.texto_pdf.get("1.0", tk.END),
             'cabecalhos': self.dados_cabecalhos
         }
-        self.dados_existentes.append(novo_registro)
+        self.dados_existentes[self.nome_pdf] = novo_registro
 
     def ao_abrir_novo_pdf(self):
         if self.dados_cabecalhos:
@@ -105,11 +106,15 @@ class MarcadorPDF(tk.Tk):
         with open(arquivo_json, 'w', encoding='utf-8') as arquivo:
             json.dump(self.dados_existentes, arquivo, indent=4, ensure_ascii=False)
         print(f"Dados salvos em '{arquivo_json}'")
-        self.quit()
+        if os.path.isdir(config.DIR_PDF_MARCADOS):
+            shutil.move(os.path.join(config.DIR_PDF, self.nome_pdf),
+                        os.path.join(config.DIR_PDF_MARCADOS, self.nome_pdf))
+        exit(0)
 
     def quit(self):
         if messagebox.askokcancel("Sair", "Deseja sair e salvar os dados atuais?"):
             self.ao_sair()
+        exit(0)
 
 
 if __name__ == '__main__':
