@@ -4,8 +4,6 @@ import shutil
 import tkinter as tk
 from tkinter import filedialog, messagebox
 import PyPDF2
-
-import config
 import config as cf
 
 
@@ -95,9 +93,9 @@ class MarcadorPDF(tk.Tk):
         if self.dados_cabecalhos:
             self.salvar_em_json()
             # Move to marked PDF folders
-            if os.path.isdir(config.DIR_PDF_MARCADOS):
-                shutil.move(os.path.join(config.DIR_PDF, self.nome_pdf),
-                            os.path.join(config.DIR_PDF_MARCADOS, self.nome_pdf))
+            if os.path.isdir(cf.DIR_PDF_MARCADOS):
+                shutil.move(os.path.join(cf.DIR_PDF, self.nome_pdf),
+                            os.path.join(cf.DIR_PDF_MARCADOS, self.nome_pdf))
         self.dados_cabecalhos = []  # Reiniciar a lista para o novo documento
 
     def ao_sair(self):
@@ -106,9 +104,9 @@ class MarcadorPDF(tk.Tk):
         with open(arquivo_json, 'w', encoding='utf-8') as arquivo:
             json.dump(self.dados_existentes, arquivo, indent=4, ensure_ascii=False)
         print(f"Dados salvos em '{arquivo_json}'")
-        if os.path.isdir(config.DIR_PDF_MARCADOS):
-            shutil.move(os.path.join(config.DIR_PDF, self.nome_pdf),
-                        os.path.join(config.DIR_PDF_MARCADOS, self.nome_pdf))
+        if os.path.isdir(cf.DIR_PDF_MARCADOS):
+            shutil.move(os.path.join(cf.DIR_PDF, self.nome_pdf),
+                        os.path.join(cf.DIR_PDF_MARCADOS, self.nome_pdf))
         exit(0)
 
     def quit(self):
